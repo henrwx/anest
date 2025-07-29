@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig.base.json",
-  "compileOnSave": false,
+  "compileOnSave": true,
   "files": [],
   "references": [
     {
@@ -8,6 +8,12 @@
     },
     {
       "path": "./apps/api"
+    },
+    {
+      "path": "./apps/client-e2e"
+    },
+    {
+      "path": "./apps/client"
     }
   ]
 }

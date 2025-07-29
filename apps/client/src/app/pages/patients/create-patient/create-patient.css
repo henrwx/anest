@@ -1,0 +1,13 @@
+.form-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 16px;
+}
+
+.form-container mat-form-field {
+  width: 100%;
+}
+
+.form-container mat-form-field.full-width {
+  grid-column: span 2;
+}

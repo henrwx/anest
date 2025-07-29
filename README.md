@@ -1,82 +1,138 @@
-# Anest
+# Patient Management App
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+This is a full-stack, monorepo application built with **Nx**, **NestJS**, **Angular**, **Prisma**, and **PostgreSQL** for managing patient records. It supports creating and viewing patients, with associated addresses and statuses.
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is almost ready ✨.
+---
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/nx-api/node?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+## Tech Stack & Versions
 
-## Finish your remote caching setup
+- **Node.js:** 24.41.1
+- **npm:** 11.5.1
+- **Angular:** 20.1.3
+- **NestJS:** 11.1.5
+- **Prisma:** 6.12.0
+- **PostgreSQL:** 14.18 (via Homebrew on macOS)
+- **Nx:** 21.3.8
 
-[Click here to finish setting up your workspace!](https://cloud.nx.app/connect/qn3SvTeQF8)
+---
 
+**Project Structure**
 
-## Run tasks
+This monorepo takes a simplified approach by defining the Prisma schema at the Nx-project level, and with the NestJS and Angular applications within the `/apps` directory.
 
-To run the dev server for your app, use:
+---
 
-```sh
-npx nx serve api
+## Setup Instructions
+
+### 1. Verify Prerequisites
+
+- Verify your installed **Node.js**, **npm** (if you are using it), and **PostgreSQL** versions
+- Clone this repository
+
+### 2. Install Dependencies
+
+In the directory where you cloned the repo, run the following command:
+
+```bash
+npm install
 ```
 
-To create a production bundle:
+### 3. Define Environment Variables
 
-```sh
-npx nx build api
+Create a local `.env` file by copying the example file, i.e.:
+
+```bash
+cp .env.example .env
 ```
 
-To see all available targets to run for a project, run:
+Replace the `user` and `password` with your local **PostgreSQL** credentials.
 
-```sh
-npx nx show project api
+### 4. Initialize the Database
+
+Run the following commands to:
+- Applying the existing Prisma migrations
+- Generate the Prisma types and client
+
+```bash
+npx prisma migrate deploy && npx prisma generate
 ```
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+### 5. Run the Applications
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+In two separate terminal windows, run each of the following commands to start each application:
 
-## Add new projects
+**Backend - NestJS API**
 
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
-
-Use the plugin's generator to create new projects.
-
-To generate a new application, use:
-
-```sh
-npx nx g @nx/node:app demo
+```bash
+nx serve api
 ```
 
-To generate a new library, use:
+**Frontend - Angular Client**
 
-```sh
-npx nx g @nx/node:lib mylib
+```bash
+nx serve client
 ```
 
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
-
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+They will be running at `http://localhost:3000/api` and `http://localhost:4200`, respectively.
 
 
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+---
 
-## Install Nx Console
+## Database Schema
 
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
+Currently, we are collecting minimal patient-related data, i.e.:
 
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+**Address**
 
-## Useful links
+| Name        	| Type   	| Comment        	|
+|-------------	|--------	|----------------	|
+| streetLine1 	| String 	|                	|
+| streetLine2 	| String 	| Optional field 	|
+| city        	| String 	|                	|
+| state       	| String 	|                	|
+| zip         	| String 	|                	|
 
-Learn more:
+**Patient**
 
-- [Learn more about this workspace setup](https://nx.dev/nx-api/node?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+| Name        	| Type          	| Comment                                        	|
+|-------------	|---------------	|------------------------------------------------	|
+| firstName   	| String        	|                                                	|
+| middleName  	| String        	| Optional field                                 	|
+| lastName    	| String        	|                                                	|
+| dateOfBirth 	| DateTime      	|                                                	|
+| addresses   	| Address[]     	| Array of addresses, based on the Address model 	|
+| status      	| PatientStatus 	| Enum value based on the PatientStatus enum     	|
 
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+In order to support multiple addresses in the future, the corresponding models were normalized, placing a reference from addresses-to-patients on the **Address** model.
+
+Initial planning included modeling the data more closely to FHIR standards; however, the current implementation was designed for simplicity, which can be migrated in the future.
+
+---
+
+## API Endpoints
+
+### Patients
+
+`GET /patients` - Retrieve all patients.
+
+`GET /patients/:id` - Retrieve patient by ID.
+
+`POST /patients` - Create a patient.
+
+`PATCH /patients/:id` - Update a patient.
+
+`DELETE /patients/:id` - Delete a patient.
+
+For this project, we only needed to use `GET /patients` and `POST /patients`.
+
+---
+
+## Frontend Features
+
+**Patients Page**
+
+Displays a table of all patients, where clicking a row displays all of their information. There is also an "+ Add Patient" button to open a dialog for creating a new patient.
+
+**Create Patient Modal**
+
+Displays an Angular dialog with a form to enter information for the new patient.

@@ -1,0 +1,86 @@
+<div class="page-header">
+  <h1>Patients</h1>
+  <button
+    mat-flat-button
+    color="primary"
+    class="create-btn"
+    (click)="openCreatePatientDialog()"
+  >
+    <mat-icon>add</mat-icon>Add Patient
+  </button>
+</div>
+
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z1">
+    <!-- ID -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>ID</th>
+      <td mat-cell *matCellDef="let patient">{{ patient.id }}</td>
+    </ng-container>
+
+    <!-- Status -->
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <td mat-cell *matCellDef="let patient">{{ patient.status }}</td>
+    </ng-container>
+
+    <!-- Name -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let patient">
+        {{ `${patient.firstName} ${patient.lastName}` }}
+      </td>
+    </ng-container>
+
+    <!-- Date of Birth -->
+    <ng-container matColumnDef="dateOfBirth">
+      <th mat-header-cell *matHeaderCellDef>Date of Birth</th>
+      <td mat-cell *matCellDef="let patient">
+        {{ patient.dateOfBirth | date }}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      (click)="selectPatient(row)"
+      [class.row-selected]="row.id === selectedPatient?.id"
+      *matRowDef="let row; columns: displayedColumns"
+    ></tr>
+  </table>
+  <mat-paginator
+    [length]="dataSource.data.length"
+    [pageSize]="5"
+    [pageSizeOptions]="[5, 10, 20]"
+  >
+  </mat-paginator>
+</div>
+
+@if (selectedPatient) {
+<mat-card class="details-card">
+  <mat-card-title>
+    {{ selectedPatient.firstName }} {{ selectedPatient.middleName ? '(' +
+    selectedPatient.middleName + ')' : '' }} {{ selectedPatient.lastName }}
+  </mat-card-title>
+  <mat-card-content>
+    <p>
+      <strong>Date of Birth:</strong> {{ selectedPatient.dateOfBirth | date:
+      'MM/dd/yyyy' }}
+    </p>
+    <p><strong>Status:</strong> {{ selectedPatient.status }}</p>
+    <p><strong>Addresses:</strong></p>
+    <ul>
+      @for (address of selectedPatient.addresses; track address.id) {
+      <li>
+        @if (address.streetLine2) { {{ address.streetLine1 }}, {{
+        address.streetLine2 }} } @else { {{ address.streetLine1 }} }
+        <br />
+        {{ address.city }}, {{ address.state }} {{ address.zip }}
+      </li>
+      } @empty {
+      <li>No addresses.</li>
+      }
+    </ul>
+  </mat-card-content>
+</mat-card>
+}
